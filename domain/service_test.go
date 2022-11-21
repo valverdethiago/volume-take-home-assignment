@@ -81,3 +81,21 @@ func TestCompletePathScenario(t *testing.T) {
 	}
 	completeScenario.run(t)
 }
+
+func TestDisconnectedPathScenario(t *testing.T) {
+	completeScenario := TestCase{
+		name: "disconnected path flight",
+		paths: &[]*Flight{
+			NewFlight("IND", "EWR"),
+			NewFlight("SFO", "ATL"),
+			NewFlight("POA", "IND"),
+			NewFlight("ATL", "GSO"),
+		},
+		assertion: func(t *testing.T, input *[]*Flight, result *[]*Flight, err error) {
+			require.NotNil(t, err)
+			require.Nil(t, result)
+			require.Truef(t, errors.Is(err, DisconnectedFlightPathMapError), "Wrong error message")
+		},
+	}
+	completeScenario.run(t)
+}

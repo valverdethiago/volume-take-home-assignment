@@ -2,9 +2,13 @@ package domain
 
 import (
 	"errors"
+	"math"
 )
 
-var EmptyFlightPathMapError = errors.New("it's not possible to calculate with an empty map")
+var (
+	EmptyFlightPathMapError        = errors.New("it's not possible to calculate with an empty map")
+	DisconnectedFlightPathMapError = errors.New("it's not possible to calculate with an empty map")
+)
 
 type FlightPathService interface {
 	CalculateFlightPath(paths *[]*Flight) (orderedPaths *[]*Flight, err error)
@@ -28,7 +32,9 @@ func (f FlightPathServiceImpl) CalculateFlightPath(paths *[]*Flight) (orderedPat
 	var next *Flight
 	for hasElement := true; hasElement; hasElement = len(*paths) > 0 {
 		index := f.findNextOrFirstFlight(paths, next)
-		//*next = *((*paths)[index])
+		if index == math.MaxInt {
+			return nil, DisconnectedFlightPathMapError
+		}
 		next, paths = getAndRemove(paths, index)
 		result = append(result, next)
 	}
@@ -36,6 +42,7 @@ func (f FlightPathServiceImpl) CalculateFlightPath(paths *[]*Flight) (orderedPat
 }
 
 func (f FlightPathServiceImpl) findNextOrFirstFlight(paths *[]*Flight, previous *Flight) (result int) {
+	result = math.MaxInt
 out:
 	for i, path := range *paths {
 		if previous == nil {
