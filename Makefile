@@ -1,12 +1,5 @@
-
-unit:
-	go test -v -tags=unit -cover ./...
-
-e2e:
-	go test -v -tags=integration -cover ./...
-
 tests:
-	go test -v -tags=integration,unit -cover ./...
+	go test -v -cover ./...
 
 run:
 	go run main.go
