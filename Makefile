@@ -14,4 +14,4 @@ docker-build:
 	docker build -f ./docker/Dockerfile . -t volume-take-home-assignment
 
 docker-run:
-	docker run -p 8080:8080 -e PORT=8080 volume-take-home-assignment
+	docker run -d -p 8080:8080 -e PORT=8080 volume-take-home-assignment
